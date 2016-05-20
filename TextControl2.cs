@@ -440,7 +440,7 @@ public void	Call_Customer_Talk(string CustomerTitle,string CustomerText)//顧客
 	CustomerTextObj.gameObject.SetActive (true);//顯示顧客要講話的物件
 	Customer.GetComponentInChildren<Text> ().text = CustomerTitle;//說話者:顧客
 	CustomerTextObj.GetComponentInChildren<Text> ().text = CustomerText;//說話內容
-}123
+}
 
 
 
