@@ -45,6 +45,9 @@ public class StrWrite : MonoBehaviour
 	public void Clear_Txt_File_Content()
 	{
 		Input.WriteFile ("","C:\\Sound_Str.txt",/*WriteMode寫入模式*/false);
-
+	}
+	public void Clear_Tag_Mode_Content()
+	{
+		Input.WriteFile ("","C:\\Player_Setting.txt",/*WriteMode寫入模式*/false);
 	}
 }

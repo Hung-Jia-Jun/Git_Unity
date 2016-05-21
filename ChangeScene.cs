@@ -4,24 +4,27 @@ using System.IO;
 public class ChangeScene: MonoBehaviour
 {
 	Change_Scene_Class Change_This_Scene = new Change_Scene_Class ();
+	StrWrite Str_Clean_Txt = new StrWrite();
 	public int Player_Mode_Switch;
-	int Mode_Control;
-	int Mode_Sound_Str;
-	int Mode_Scenes_Deside;
-	int Mode_Language_Deside;
+	int Player_Mode;
+	public string Scenes_Name;//場景名稱
+	public int This_PageNum;//當前頁面
 	void Start ()
 	{
-		Player_Setting_Mode();
+		Player_Mode_Switch=99;//預設Case
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
-
+		//Player_Mode_Switch=Change_This_Scene.Player_Setting_Mode(This_PageNum);
+		//Debug.Log(Player_Mode_Switch);
 		switch (Player_Mode_Switch)
 		{
+
 			case 0:
 			{
+				Change_This_Scene.ChangeScence(Scenes_Name);
 				break;
 			}
 			case 1:
@@ -36,29 +39,21 @@ public class ChangeScene: MonoBehaviour
 			{
 				break;
 			}
+			case 99:
+			{
+				break;
+			}
 		}
 	}
-
-public void Player_Setting_Mode()
-{
-	Mode_Control=Change_This_Scene.Control_Deside();//判斷Player_Setting裡面的控制方式狀態，並回傳數值
-	Debug.Log(Mode_Control);
-
-	Mode_Sound_Str=Change_This_Scene.Sound_Str_Content();//判斷Player_Setting裡面的劇本填入狀態，並回傳數值
-	Debug.Log(Mode_Sound_Str);
-
-	Mode_Scenes_Deside=Change_This_Scene.Scenes_Deside();//判斷Player_Setting裡面的場景選擇狀態，並回傳數值
-	Debug.Log(Mode_Scenes_Deside);
-
-	Mode_Language_Deside=Change_This_Scene.Language_Deside();//判斷Player_Setting裡面的語言選擇狀態，並回傳數值
-	Debug.Log(Mode_Language_Deside);
-
-}
-
-
-
-
-
+	public void When_User_Click_Start_Button(int This_PageNum) //當使用者按下開始扭
+	{
+		Player_Mode_Switch=Change_This_Scene.Player_Setting_Mode(This_PageNum);//傳入當前頁數判斷Switch狀態
+	}
+	public void When_User_Click_Leaf_Button()//當使用者按下離開按鈕時
+	{
+		Str_Clean_Txt.Clear_Txt_File_Content ();//清空文字檔
+		Str_Clean_Txt.Clear_Tag_Mode_Content();//清空所有Tag狀態
+	}
 }
 
 
