@@ -22,37 +22,9 @@ void FixedUpdate()
 		RecognizeResult.GetComponentInChildren<Text> ().text = TxtRecognize;//說話者:顧客
 		Debug.Log(TxtRecognize);
 	}
-public void CheckRecog(string RecoText)//語音檢測
+public bool CheckRecog(string RecoText)//語音檢測
 {
 bool Status;
-/*************************不管使用者說哪句都會通過*****************************/
-if(TxtRecognize=="我要一間大")//我要一間大街風景房
-    {
-		Status = true;//辨識成功
-		SceneControl.SendMessage ("ReturnCheck",Status);
-    }
-if(TxtRecognize=="我要一間日")//我要一間日月潭美景房
-    {
-		Status = true;//辨識成功
-		SceneControl.SendMessage ("ReturnCheck",Status);
-    }
-if(TxtRecognize=="我要付現金")//我要一間日月潭美景房
-    {
-		Status = true;//辨識成功
-		SceneControl.SendMessage ("ReturnCheck",Status);
-    }
-if(TxtRecognize=="我要刷卡請")//我要一間日月潭美景房
-    {
-		Status = true;//辨識成功
-		SceneControl.SendMessage ("ReturnCheck",Status);
-    }
-if(TxtRecognize=="我要手機支")//我要一間日月潭美景房
-    {
-		Status = true;//辨識成功
-		SceneControl.SendMessage ("ReturnCheck",Status);
-    }
-
-/*************************不管使用者說哪句都會通過*****************************/
 if (RecoText == TxtRecognize)
 	{
 		Status = true;//辨識成功
@@ -64,13 +36,15 @@ else
 		Status = false;
 		SceneControl.SendMessage ("ReturnCheck",Status);
 	}
+		return Status;
 
 }
+
 	//讀取txt
 	string ReadFile(string FileName,int linenumber)
 	{
-		System.Text.Encoding.GetEncoding ("utf-8");
-		string[] strs=File.ReadAllLines(FileName,System.Text.Encoding.Default);
+		//System.Text.Encoding.GetEncoding ("utf-8");
+		string[] strs=File.ReadAllLines(FileName);
 		linenumber=strs.Length;
 		if (linenumber==0)
 		{

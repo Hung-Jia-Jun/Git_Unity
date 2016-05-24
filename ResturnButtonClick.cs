@@ -7,9 +7,10 @@ public class ResturnButtonClick : MonoBehaviour{
 	public GameObject Pic_G;//要顯示的G圖，詳情請看Docx文件
 	public GameObject Player_Edit_Hotel;//使用者自訂輸入區
 	public GameObject Player_Edit_Resturn;//使用者自訂輸入區
-
+	Input_class Input =new Input_class();
 	public void PointerClick()//滑鼠按下事件
 	{
+		Input.Write_Mark_Line("Scenes Mode=2",2,"C:\\Player_Setting.txt");
 		Player_Edit_Resturn.SetActive (true);//開啟餐廳的編輯區
 		Player_Edit_Hotel.SetActive (false);//關閉旅館的編輯區
 		Pic_G.SetActive (true);//開啟餐廳的圖片

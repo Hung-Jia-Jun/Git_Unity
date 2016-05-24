@@ -10,7 +10,10 @@ public class StrWrite : MonoBehaviour
 	public GameObject Clear;
 	public InputField InputField;
 	public string IsUser;
-
+	void Start()
+	{
+		Input.WriteFile ("","C:\\Sound_Str.txt",/*WriteMode寫入模式*/false);//先完全清空文字檔
+	}
 
 
 
@@ -44,10 +47,17 @@ public class StrWrite : MonoBehaviour
 	}
 	public void Clear_Txt_File_Content()
 	{
-		Input.WriteFile ("","C:\\Sound_Str.txt",/*WriteMode寫入模式*/false);
+		Input.WriteFile ("Str_Content_None","C:\\Sound_Str.txt",/*WriteMode寫入模式*/false);//先完全清空文字檔
 	}
 	public void Clear_Tag_Mode_Content()
 	{
-		Input.WriteFile ("","C:\\Player_Setting.txt",/*WriteMode寫入模式*/false);
+		Input.WriteFile ("Player Control=","C:\\Player_Setting.txt",/*WriteMode寫入模式*/false);//先完全清空文字檔
+		Input.WriteFile ("Scenes Mode=","C:\\Player_Setting.txt",/*WriteMode寫入模式*/true);//先完全清空文字檔
+		Input.WriteFile ("Language=","C:\\Player_Setting.txt",/*WriteMode寫入模式*/true);//先完全清空文字檔
+		Input.WriteFile ("Lesson=","C:\\Player_Setting.txt",/*WriteMode寫入模式*/true);//先完全清空文字檔
+	}
+	public void Back()
+	{
+		Application.LoadLevel("Scence/Page1");
 	}
 }

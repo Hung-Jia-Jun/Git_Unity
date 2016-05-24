@@ -3,6 +3,8 @@ using System.Collections;
 using UnityEngine.UI;
 using System.IO;
 public class TextControl : MonoBehaviour {
+	Input_class Input =new Input_class();//導入inputClass
+	Change_Scene_Class Language =new Change_Scene_Class();
 	public int PlayerTalk;//說話狀態
 	public GameObject RecognizeTextObj;//語音辨識物件
 	public GameObject German_SoundArray;
@@ -48,9 +50,20 @@ public class TextControl : MonoBehaviour {
 	public GameObject ExitButton;//退出按鈕
 	public bool RecgStatus;//語音辨識狀態
 	public int MusicArrayNum;//聲音陣列
+	int Language_Mode;
 	bool TimerReset;//用這個bool值偵測計時器是不是歸零了，因為要做Do Once一次
 	void Start () {
-
+		Language_Mode=Language.Language_Deside();
+		if (Language_Mode==1)
+		{
+			//中文
+			noChinese=false;
+		}
+		else if (Language_Mode==2)
+		{
+			//德文
+			noChinese=true;
+		}
 		Chefman=GameObject.Find("廚師");//老闆的角色物件
 		Chef=GameObject.Find("ChefTextObj");//老闆對話框標題
 		ChefTextObj= GameObject.Find("ChefTalk");//老闆要講的話
@@ -79,10 +92,6 @@ public class TextControl : MonoBehaviour {
 
 	void FixedUpdate () {
 		Timer++;
-		if (Input.GetKeyDown("s"))
-			{
-				PlayerTalk++;
-			}
 		switch (PlayerTalk) {
 
 		case 0://顧客
@@ -1024,10 +1033,11 @@ public void BackButtonClick()//上一步
 		PlayerTalk--;//玩家對話狀態-1
 		CloseAllTextBox();//每次畫面刷新都先關閉所有物件
 	}
-public void ExitButtonClick()//退出
+public void Recognize()//語音辨識紐
 	{
 		PlayerTalk = 27;//離開鍵的狀態釋放區
 		CloseAllTextBox();//每次畫面刷新都先關閉所有物件
+		Input.Write_Mark_Line(/*要寫入的訊息*/"1",/*寫入指定行*/1,/*檔案路徑*/"C:\\A.txt");
 	}
 public void resettime()//計時器歸零
 	{

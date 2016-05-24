@@ -7,8 +7,10 @@ public class HotelButtonClick : MonoBehaviour{
 	public GameObject ResturnButton;//餐廳button
 	public GameObject Player_Edit_Hotel;//使用者自訂輸入區
 	public GameObject Player_Edit_Resturn;//使用者自訂輸入區
+	Input_class Input =new Input_class();
 	public void PointerClick()//滑鼠按下事件
 	{
+		Input.Write_Mark_Line("Scenes Mode=1",2,"C:\\Player_Setting.txt");
 		Player_Edit_Hotel.SetActive (true);
 		Player_Edit_Resturn.SetActive (false);
 		Pic_F.SetActive (true);//開啟旅館的UI圖

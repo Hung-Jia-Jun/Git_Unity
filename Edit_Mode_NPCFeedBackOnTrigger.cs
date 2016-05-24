@@ -1,44 +1,40 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-public class NPCFeedBackOnTrigger : MonoBehaviour {
+public class Edit_Mode_NPCFeedBackOnTrigger : MonoBehaviour {
     Change_Scene_Class Read_File =new Change_Scene_Class();//從Change_Scene_Class抓取出Read File參考
     Scence1CatchRecog RecogText =new Scence1CatchRecog();//從語音辨識的腳本取出辨識功能
     public TextAsset Scence1_txt;//導入Txt
     public string TxtRecognize;
-
+	public string Sound_Str_Content;//文字劇本檔內容
     public Camera[] CameraArray;//相機陣列
     public Animator Waiter;//服務生的動畫控制器
     public bool PlayerTalkText;//玩家說話框
     public bool WaiterTalkText;//服務生說話控制
     public GUIStyle btnStyle;//宣告上下一步按鈕style
     public int PlayerSwitch=1;//每次要說的話都放在這邊
-    
-
-
+    public GameObject NextButton;//下一步按鈕是否顯示
+    public GameObject BackButton;//上一步按鈕是否顯示
+    public GameObject ExitButton;//上一步按鈕是否顯示
+	public GameObject RecognizeTextObj;//語音辨識的物件
+    public GameObject Recognize_Button;//語音辨識按鈕
+	public bool RecgStatus;//偵測辨識結果
     //---------------------------------------------------------------
     public GameObject NPCTextBox_BackGround;//NPC對話框背景
+	public GameObject RecogTextBox;//語音辨識結果
     public GameObject NPCTextBox;//NPC要講的話，去文字檔動態產生
     public GameObject PlayerTextBox_BackGround;//玩家對話框背景
     public GameObject PlayerTextBox;//玩家要講的話，去文字檔動態產生
     //---------------------------------------------------------------
-    
 
-    public GameObject NextButton;//下一步按鈕是否顯示
-    public GameObject BackButton;//上一步按鈕是否顯示
-    public GameObject ExitButton;//上一步按鈕是否顯示
-    public GameObject RecognizeTextObj;//語音辨識的物件
-    public GameObject RecogTextBox;//語音辨識結果
-    GameObject Currect = GameObject.Find("正確");
-    GameObject False = GameObject.Find("錯誤");
     public float Timer = 0f;
-    public bool RecgStatus;//偵測辨識結果
+
     void Start () {
 
         RecogTextBox.GetComponentInChildren<Text> ().text ="";
         RecognizeTextObj=GameObject.Find("RecognizeTextObj");//語音辨識之比對物件
         RecogTextBox=GameObject.Find("RecogTextBox");//語音辨識結果顯示窗
-        
+		Recognize_Button=GameObject.Find("Recognize");//語音辨識結果顯示窗
         //-------------------------------------------------------------------------------------------
         NPCTextBox_BackGround = GameObject.Find("NPCTalkText_Background");//NPC對話框背景
         PlayerTextBox_BackGround=GameObject.Find("PlayerTalkText_Background");//玩家對話框背景
@@ -73,10 +69,6 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
 
      switch (PlayerSwitch)
         {
-            if (Input.GetKeyDown ("space")) 
-            {
-                PlayerSwitch++;
-            }
             case 0:
                 {
                     Timer = 0;//設定計時器為0
@@ -85,8 +77,10 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 1:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Sound_Str_Content);
+
                     if (Timer > 5)
                     {
                         PlayerSwitch++;
@@ -96,8 +90,10 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 2:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Sound_Str_Content);
+
                     if (Timer > 10)
                     {
                        SwitchRecognizeOk(/*語音辨識內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));//傳入語音辨識驗證使用者的話
@@ -108,8 +104,10 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 3:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Sound_Str_Content);
+
                     //ButtonUI(/*ShowNext*/false,/*ShowBack*/true,/*ShowExit*/false);//UIButton顯示設定
                     if (Timer > 3)
                     {
@@ -121,8 +119,10 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 4:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Sound_Str_Content);
+
                     if (Timer > 10)
                     {
                         SwitchRecognizeOk(/*語音辨識內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));//傳入語音辨識驗證使用者的話
@@ -134,10 +134,12 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 5:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
                     //ButtonUI(/*ShowNext*/false,/*ShowBack*/true,/*ShowExit*/false);//UIButton顯示設定
                     if (Timer > 5)
                     {
@@ -148,13 +150,15 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 6:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
+
+
                     if (Timer > 10)
                     {
                     SwitchRecognizeOk(/*語音辨識內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));//傳入語音辨識驗證使用者的話
@@ -166,11 +170,13 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 7:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
                     //ButtonUI(/*ShowNext*/false,/*ShowBack*/true,/*ShowExit*/false);//UIButton顯示設定
                     if (Timer > 5)
                     {
@@ -182,12 +188,14 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 8:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
+
                     //ButtonUI(/*ShowNext*/false,/*ShowBack*/true,/*ShowExit*/false);//UIButton顯示設定
                     if (Timer > 5)
                     {
@@ -198,14 +206,16 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 9:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
 
-                     
-                     
-                     
-                     
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
+
+
+
                     if (Timer > 10)
                     {
                         SwitchRecognizeOk(/*語音辨識內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));//傳入語音辨識驗證使用者的話
@@ -218,11 +228,13 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 10:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
                     //ButtonUI(/*ShowNext*/false,/*ShowBack*/true,/*ShowExit*/false);//UIButton顯示設定
                     if (Timer > 5)
                     {
@@ -233,13 +245,15 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 11:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
+
+
                     if (Timer > 10)
                     {
                         SwitchRecognizeOk(/*語音辨識內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));//傳入語音辨識驗證使用者的話
@@ -250,11 +264,13 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 12:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
                     //ButtonUI(/*ShowNext*/false,/*ShowBack*/true,/*ShowExit*/false);//UIButton顯示設定
                     if (Timer > 5)
                     {
@@ -265,13 +281,15 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 13:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
+
+
                     if (Timer > 10)
                     {
                         SwitchRecognizeOk(/*語音辨識內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));//傳入語音辨識驗證使用者的話
@@ -282,11 +300,13 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 14:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
                     //ButtonUI(/*ShowNext*/false,/*ShowBack*/true,/*ShowExit*/false);//UIButton顯示設定
                     if (Timer > 5)
                     {
@@ -297,13 +317,15 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 15:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
+
+
                     if (Timer > 10)
                     {
                         SwitchRecognizeOk(/*語音辨識內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));//傳入語音辨識驗證使用者的話
@@ -314,11 +336,13 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 16:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
                     //ButtonUI(/*ShowNext*/false,/*ShowBack*/true,/*ShowExit*/false);//UIButton顯示設定
                     if (Timer > 5)
                     {
@@ -329,13 +353,15 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 17:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
+
+
                     if (Timer > 10)
                     {
                         SwitchRecognizeOk(/*語音辨識內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));//傳入語音辨識驗證使用者的話
@@ -346,11 +372,13 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 18:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
                     //ButtonUI(/*ShowNext*/false,/*ShowBack*/true,/*ShowExit*/false);//UIButton顯示設定
                     if (Timer > 5)
                     {
@@ -361,13 +389,15 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 19:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
+
+
                     if (Timer > 10)
                     {
                         SwitchRecognizeOk(/*語音辨識內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));//傳入語音辨識驗證使用者的話
@@ -378,11 +408,13 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 20:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
                     //ButtonUI(/*ShowNext*/false,/*ShowBack*/true,/*ShowExit*/false);//UIButton顯示設定
                     if (Timer > 5)
                     {
@@ -393,13 +425,15 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 21:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
-                     
-                     
+                    Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
+
+
                     if (Timer > 10)
                     {
                         SwitchRecognizeOk(/*語音辨識內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));//傳入語音辨識驗證使用者的話
@@ -410,11 +444,13 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 22:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
                     //ButtonUI(/*ShowNext*/false,/*ShowBack*/true,/*ShowExit*/false);//UIButton顯示設定
                     if (Timer > 5)
                     {
@@ -425,13 +461,15 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 23:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
+
+
                     if (Timer > 10)
                     {
                         SwitchRecognizeOk(/*語音辨識內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));//傳入語音辨識驗證使用者的話
@@ -442,11 +480,13 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 24:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
+                 Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
                     //ButtonUI(/*ShowNext*/false,/*ShowBack*/true,/*ShowExit*/false);//UIButton顯示設定
                     if (Timer > 5)
                     {
@@ -457,16 +497,17 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 25:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
-                     
-                     
+                    Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"Player",/*Message去讀取的內容*/Sound_Str_Content);
+
+
+
+
+
+
                     if (Timer > 10)
                     {
-                        SwitchRecognizeOk(/*語音辨識內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));//傳入語音辨識驗證使用者的話
+						SwitchRecognizeOk(/*語音辨識內容*/Sound_Str_Content);//傳入語音辨識驗證使用者的話
                     }
                     //ButtonUI(/*ShowNext*/false,/*ShowBack*/true,/*ShowExit*/false);//UIButton顯示設定
 
@@ -474,28 +515,21 @@ public class NPCFeedBackOnTrigger : MonoBehaviour {
                 }
             case 26:
                 {
-                    Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch));
-                     
-                    
-                     
-                     
+				    Sound_Str_Content=Read_File.ReadFile(/*檔案路徑*/"C:\\Sound_Str.txt",/*讀取第幾行*/PlayerSwitch);
+					Call_Txt_To_Talk(/*讀取對像NPC或是Player*/"NPC",/*Message去讀取的內容*/Sound_Str_Content);
                     //ButtonUI(/*ShowNext*/false,/*ShowBack*/true,/*ShowExit*/true);//UIButton顯示設定
 
                     break;
                 }
             case 27: //離開鍵的狀態釋放區
-                {                     
+                {
                     //ButtonUI(/*ShowNext*/false,/*ShowBack*/false,/*ShowExit*/false);//UIButton顯示設定
                     CameraArray[0].gameObject.SetActive(true);//主角相機關
                     CameraArray[1].gameObject.SetActive(false);//NPC相機開
                     break;
                 }
 		}
-
-
-
-
-    }
+		}
 
 
 public void ButtonUI(bool ShowNext,bool ShowBack,bool ShowExit)//按鈕控制
@@ -541,7 +575,7 @@ public void Call_Txt_To_Talk(/*NPC或是Player*/ string Select,/*Message*/string
         PlayerTextBox.GetComponentInChildren<Text> ().text = Message;//說話內容
     }
 }
-public void SwitchRecognizeOk(string message);//傳入語音辨識驗證使用者的話
+public void SwitchRecognizeOk(string message)//傳入語音辨識驗證使用者的話
 {
 
 	RecgStatus=RecogText.CheckRecog(message);//回傳辨識結果
@@ -560,5 +594,7 @@ public void SwitchRecognizeOk(string message);//傳入語音辨識驗證使用�
 	}
 
 }
+
+
 }
 
